@@ -42,6 +42,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:password="true"
         android:textColorHint="#FFFFFF"
         android:hint="Password"
         android:textColor="#FFFFFF" />
@@ -72,6 +73,7 @@ android:inputType="number"
         android:backgroundTint="#000000"
         android:text="Already signed in? please click here."
         android:textColor="#34BBA6" />
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

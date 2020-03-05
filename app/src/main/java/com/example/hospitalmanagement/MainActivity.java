@@ -76,11 +76,12 @@ FirebaseAuth.AuthStateListener FauthStateListner;
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                        if(!task.isSuccessful()){
-                           Toast.makeText(MainActivity.this, "not  success ", Toast.LENGTH_SHORT).show();
-                       }
-                       else{
                            Intent i = new Intent(MainActivity.this, signup.class);
                            startActivity(i);
+                       }
+                       else{
+
+                           Toast.makeText(MainActivity.this, "not  success ", Toast.LENGTH_SHORT).show();
                        }
                         }
                     });
@@ -96,7 +97,8 @@ startActivity(i);
         });
     }
 
-  /*  @Override
+
+    /*@Override
     protected void onStart() {
         super.onStart();
         Fauth.addAuthStateListener(FauthStateListner );
