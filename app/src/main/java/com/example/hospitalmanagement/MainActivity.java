@@ -35,7 +35,6 @@ FirebaseAuth.AuthStateListener FauthStateListner;
         signupx = findViewById(R.id.signup);
         pb1x = findViewById(R.id.pb1);
         Fauth = FirebaseAuth.getInstance();
-
         FauthStateListner = new FirebaseAuth.AuthStateListener() {
 
 
@@ -43,9 +42,9 @@ FirebaseAuth.AuthStateListener FauthStateListner;
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = Fauth.getCurrentUser();
                 if(firebaseUser != null){
-                    Toast.makeText(MainActivity.this, "logged in ", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(MainActivity.this, signup.class);
-                    startActivity(i);
+                    //Toast.makeText(MainActivity.this, "logged in ", Toast.LENGTH_SHORT).show();
+                    //Intent i = new Intent(MainActivity.this, home .class);
+                    //startActivity(i);
                 }
                 else {
                     Toast.makeText(MainActivity.this, "details please ", Toast.LENGTH_SHORT).show();
@@ -53,7 +52,8 @@ FirebaseAuth.AuthStateListener FauthStateListner;
 
             }
         };
-        signinx.setOnClickListener(new View.OnClickListener() {
+
+        signinx.setOnClickListener(   new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -69,22 +69,28 @@ FirebaseAuth.AuthStateListener FauthStateListner;
                         passwordx.setError("Need the password dude");
                         return;
                     }
+                    else if (!(email.isEmpty() && password.isEmpty())){
+                        Fauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if(!task.isSuccessful()){
+                                    Toast.makeText(MainActivity.this, "not  success ", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(MainActivity.this, home.class);
+                                    startActivity(i);
+                                }
+                                else{
+
+
+                                    Toast.makeText(MainActivity.this, "authentication succesful", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
+                    }
 
                     pb1x.setVisibility(View.VISIBLE);
 
-                    Fauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                       if(!task.isSuccessful()){
-                           Intent i = new Intent(MainActivity.this, signup.class);
-                           startActivity(i);
-                       }
-                       else{
 
-                           Toast.makeText(MainActivity.this, "not  success ", Toast.LENGTH_SHORT).show();
-                       }
-                        }
-                    });
 
             }
         });

@@ -85,22 +85,28 @@ if (v == registerx){
             Toast.makeText(this,"Enter phone",Toast.LENGTH_SHORT).show();
             return;
         }
-FAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-    @Override
-    public void onComplete(@NonNull Task<AuthResult> task) {
-        if(task.isSuccessful()){
-Toast.makeText(signup.this,"Registered user", Toast.LENGTH_SHORT).show();
-Intent i1 = new Intent(signup.this,MainActivity.class);
-startActivity(i1);
-return;
-        }
-        else {
-Toast.makeText(signup.this,"something is starting to go wrong", Toast.LENGTH_SHORT).show();
-return;
-        }
-    }
-});
+        else if (!(email.isEmpty() && username.isEmpty() && phone.isEmpty() && password.isEmpty())){
+            FAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this,    new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        Toast.makeText(signup.this,"something is starting to go wrong", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    else {
 
+                        Toast.makeText(signup.this,"Registered user", Toast.LENGTH_SHORT).show();
+                        Intent i1 = new Intent(signup.this,MainActivity.class);
+                        startActivity(i1);
+                        return;
+                    }
+                }
+            });
+
+        }
+else {
+            Toast.makeText(signup.this,"un successful", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
