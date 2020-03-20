@@ -74,14 +74,14 @@ FirebaseAuth.AuthStateListener FauthStateListner;
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(!task.isSuccessful()){
-                                    Toast.makeText(MainActivity.this, "not  success ", Toast.LENGTH_SHORT).show();
-                                    Intent i = new Intent(MainActivity.this, home.class);
-                                    startActivity(i);
+                                    Toast.makeText(MainActivity.this, "authentication succesful", Toast.LENGTH_SHORT).show();
+
                                 }
                                 else{
 
-
-                                    Toast.makeText(MainActivity.this, "authentication succesful", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "not  success ", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(MainActivity.this, home.class);
+                                    startActivity(i);
 
                                 }
                             }
