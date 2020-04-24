@@ -1,112 +1,149 @@
 package com.example.hospitalmanagement;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
-EditText Emailx,passwordx;
-Button signinx,signupx;
-Intent i;
-FirebaseAuth Fauth;
-ProgressBar pb1x;
-FirebaseAuth.AuthStateListener FauthStateListner;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    Button btnLogin;
+    EditText txtEmail, txtPassword;
+    TextView lblRegister;
+    Intent intent;
+
+    SharedPreferences sp;
+    SharedPreferences.Editor editor;
+
+    DataServices service;
+
+    boolean isLogin;
+    int userID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Emailx = findViewById(R.id.email);
-        passwordx = findViewById(R.id.password);
-        signinx = findViewById(R.id.signin);
-        signupx = findViewById(R.id.signup);
-        pb1x = findViewById(R.id.pb1);
-        Fauth = FirebaseAuth.getInstance();
-        FauthStateListner = new FirebaseAuth.AuthStateListener() {
+        super.onCreate ( savedInstanceState );
+        setContentView ( R.layout.activity_main );
+        lblRegister=findViewById ( R.id.lblRegister );
+        btnLogin=findViewById ( R.id.btnLogin );
+        txtEmail=findViewById ( R.id.txtUserNameLogin );
+        txtPassword=findViewById ( R.id.txtPasswordLogin );
+        btnLogin.setOnClickListener ( (View.OnClickListener) this );
 
+        lblRegister.setOnClickListener ( (View.OnClickListener) this );
 
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = Fauth.getCurrentUser();
-                if(firebaseUser != null){
-                    //Toast.makeText(MainActivity.this, "logged in ", Toast.LENGTH_SHORT).show();
-                    //Intent i = new Intent(MainActivity.this, home .class);
-                    //startActivity(i);
-                }
-                else {
-                    Toast.makeText(MainActivity.this, "details please ", Toast.LENGTH_SHORT).show();
-                }
+        //directs the compiler to the cache file
+        sp=getSharedPreferences ( MyVariables.cacheFile, Context.MODE_PRIVATE );
 
-            }
-        };
+        //get values from cache file
+        isLogin=sp.getBoolean ( MyVariables.keyLoginAuth, MyVariables.defaultLoginAuth );
+        userID=sp.getInt ( MyVariables.keyUserID, MyVariables.defaultUserID );
+        //check if values are valid.
+        if (isLogin && userID > 0) {
+            finish ( );
+            intent=new Intent ( getApplicationContext ( ), home.class );    //logs the user without credentials
+            intent.addFlags ( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+            startActivity ( intent );
+        }
 
-        signinx.setOnClickListener(   new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                    String email = Emailx.getText().toString().trim();
-                    String password = passwordx.getText().toString().trim();
-
-                    if(TextUtils.isEmpty(email)){
-                        Emailx.setError("Need the email dude");
-                        return;
-
-                    }
-                    if(TextUtils.isEmpty(password)){
-                        passwordx.setError("Need the password dude");
-                        return;
-                    }
-                    else if (!(email.isEmpty() && password.isEmpty())){
-                        Fauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(!task.isSuccessful()){
-                                    Toast.makeText(MainActivity.this, "authentication succesful", Toast.LENGTH_SHORT).show();
-
-                                }
-                                else{
-
-                                    Toast.makeText(MainActivity.this, "not  success ", Toast.LENGTH_SHORT).show();
-                                    Intent i = new Intent(MainActivity.this, home.class);
-                                    startActivity(i);
-
-                                }
-                            }
-                        });
-                    }
-
-                    pb1x.setVisibility(View.VISIBLE);
-
-
-
-            }
-        });
-        signupx.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-Intent i = new Intent(MainActivity.this, signup.class);
-startActivity(i);
-            }
-        });
     }
 
-
-    /*@Override
+    @Override
     protected void onStart() {
-        super.onStart();
-        Fauth.addAuthStateListener(FauthStateListner );
-    }*/
+        super.onStart ( );
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId ( )) {
+            case R.id.btnLogin:
+                btnLoginClick ( v );
+                break;
+            case R.id.lblRegister:
+                intent=new Intent ( MainActivity.this, signup.class );
+                startActivity ( intent );
+                break;
+            default:
+                Toast.makeText ( this, "Invalid click operation!", Toast.LENGTH_SHORT ).show ( );
+                break;
+        }
+    }
+
+    private void btnLoginClick(View v) {
+
+        String email=txtEmail.getText ( ).toString ( ).trim ( );
+        String password=txtPassword.getText ( ).toString ( ).trim ( );
+
+        if (TextUtils.isEmpty ( email )) {
+            txtEmail.setError ( "Email is Required." );
+            return;
+        }
+
+        if (TextUtils.isEmpty ( password )) {
+            txtPassword.setError ( "Password is Required." );
+            return;
+        }
+
+        if (password.length ( ) < 6) {
+            txtPassword.setError ( "Password Must be >= 6 Characters" );
+            return;
+        }
+
+        LoginDetails loginDetails=new LoginDetails ( email, password );
+
+        service=RetrofitClientInstance.getRetrofitInstance ( ).create ( DataServices.class );
+
+        Call<UserDetails> call=service.executeLogin ( loginDetails );
+
+        call.enqueue ( new Callback<UserDetails> ( ) {
+            @Override
+            public void onResponse(Call<UserDetails> call, Response<UserDetails> response) {
+                if (!response.isSuccessful ( )) {
+                    Toast.makeText ( MainActivity.this, response.code ( ), Toast.LENGTH_SHORT ).show ( );
+                    return;
+                }
+
+                UserDetails userDetails=response.body ( );
+
+                if (!userDetails.getStr ( ).equals ( "Valid" )) {
+                    Toast.makeText ( MainActivity.this, userDetails.getStr ( ), Toast.LENGTH_SHORT ).show ( );
+                    return;
+                }
+
+                //Successful log in
+                editor=sp.edit ( );
+                //store values
+                editor.putBoolean ( MyVariables.keyLoginAuth, true );
+                editor.putInt ( MyVariables.keyUserID, userDetails.getUserID ( ) );
+                editor.apply ( );
+
+                finish ( );
+                intent=new Intent ( getApplicationContext ( ), home.class );
+                intent.addFlags ( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                startActivity ( intent );
+            }
+
+            @Override
+            public void onFailure(Call<UserDetails> call, Throwable t) {
+                Toast.makeText ( MainActivity.this, t.getMessage ( ), Toast.LENGTH_SHORT ).show ( );
+            }
+        } );
+
+
+    }
 }

@@ -26,7 +26,7 @@ Intent i;
         profilex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent();
+                Intent i = new Intent(home.this,profile.class);
                 startActivity(i);
 
             }
