@@ -26,10 +26,6 @@ public class UserDetails {
     @SerializedName("str")
     private String str;
 
-    public UserDetails(String name, String email, String dob, String phone, String age, String bloodgroup){
-
-    }
-
     public UserDetails(String name, String email, String phone, String address) {
         this.name = name;
         this.email = email;

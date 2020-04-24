@@ -25,7 +25,7 @@
                 android:layout_gravity="left"/>
             <EditText
                 android:layout_width="match_parent"
-                android:id="@+id/ename"
+                android:id="@+id/enamePatient"
                 android:layout_marginRight="10dp"
                 android:layout_height="50dp"
                 android:textSize="30dp"/>
@@ -46,7 +46,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_marginRight="10dp"
-                android:id="@+id/eemail"
+                android:id="@+id/eemailPatient"
                 android:layout_height="50dp"
                 android:textSize="30dp"/>
         </LinearLayout>
@@ -65,7 +65,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_marginRight="10dp"
-                android:id="@+id/edob"
+                android:id="@+id/edobPatient"
                 android:layout_height="50dp"
                 android:textSize="30dp"/>
         </LinearLayout>
@@ -83,7 +83,7 @@
                 android:layout_gravity="left"/>
             <EditText
                 android:layout_width="match_parent"
-                android:id="@+id/ephone"
+                android:id="@+id/ephonePatient"
                 android:layout_marginRight="10dp"
                 android:layout_height="50dp"
                 android:textSize="30dp"/>
@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_marginRight="10dp"
                 android:layout_height="50dp"
-                android:id="@+id/eage"
+                android:id="@+id/eagePatient"
                 android:textSize="30dp"/>
         </LinearLayout>
         <LinearLayout
@@ -122,13 +122,13 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:id="@+id/ebloodgroup"
+                android:id="@+id/ebloodgroupPatient"
                 android:layout_marginRight="10dp"
                 android:textSize="30dp"/>
         </LinearLayout>
     </LinearLayout>
     <Button
-        android:id="@+id/save"
+        android:id="@+id/btnSavePatient"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:textSize="30dp"

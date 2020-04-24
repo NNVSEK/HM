@@ -23,22 +23,20 @@ import org.json.JSONObject;
 public class patientlist extends AppCompatActivity {
     private TextView mTextViewResult;
     private RequestQueue mQueue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_patientlist);
-        mTextViewResult = findViewById(R.id.text_view_result);
-        Button buttonParse = findViewById(R.id.button_parse);
+        super.onCreate ( savedInstanceState );
+        setContentView ( R.layout.activity_patientlist );
+        mTextViewResult=findViewById ( R.id.text_view_result );
+        Button buttonParse=findViewById ( R.id.button_parse );
 
-        mQueue = Volley.newRequestQueue(this);
+        mQueue=Volley.newRequestQueue ( this );
 
-        buttonParse.setOnClickListener(new View.OnClickListener() {
+        buttonParse.setOnClickListener ( new View.OnClickListener ( ) {
             @Override
             public void onClick(View v) {
-
-
-
-                JsonObjectRequest request = new JsonObjectRequest ( Request.Method.GET, "http://localhost/node-20200423T235533Z-001/node/patientlist.json", null,
+                JsonObjectRequest request=new JsonObjectRequest ( Request.Method.GET, "http://10.0.2.2/node-20200423T235533Z-001/node/patientlist.json", null,
                         new Response.Listener<JSONObject> ( ) {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -51,28 +49,26 @@ public class patientlist extends AppCompatActivity {
                                         String firstName=patients_list.getString ( "firstname" );
                                         int age=patients_list.getInt ( "age" );
                                         String mail=patients_list.getString ( "mail" );
-                                        String phone=patients_list.getString("phone");
+                                        String phone=patients_list.getString ( "phone" );
 
-                                        mTextViewResult.append ( firstName    + ",   " + String.valueOf ( age ) + ",   " + mail +","+ String.valueOf ( phone ) + "\n\n" );
+                                        mTextViewResult.append ( firstName + ",   " + String.valueOf ( age ) + ",   " + mail + "," + String.valueOf ( phone ) + "\n\n" );
                                     }
                                 } catch (JSONException e) {
 
                                     e.printStackTrace ( );
                                 }
                             }
-                        }, new Response.ErrorListener ( )
-
-                {
+                        }, new Response.ErrorListener ( ) {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e ( "VOLLEY","ERROR");
-                        error.printStackTrace();
+                        Log.e ( "VOLLEY", "ERROR" );
+                        error.printStackTrace ( );
                     }
-                });
+                } );
 
-                mQueue.add(request);
+                mQueue.add ( request );
             }
-        });
+        } );
     }
 
 

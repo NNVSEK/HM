@@ -20,9 +20,10 @@ public interface DataServices {
     Call<String> executeEditUserProfile(@Body UserDetails user);
 
     @GET("/user/edit/{userID}")
-    Call<UserDetails> executeGetUserProfileByID(@Path(value = "userID", encoded = true) int userID);
+    Call<UserDetails> executeGetUserProfileByID(@Path(value="userID", encoded=true) int userID);
 
-
+    @POST("/patient/add")
+    Call<String> executeAddPatient(@Body Patient patient);
 
 
 }
